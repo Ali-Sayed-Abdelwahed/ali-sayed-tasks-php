@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 16, 2022 at 11:49 AM
+-- Generation Time: Sep 20, 2022 at 05:56 AM
 -- Server version: 10.4.24-MariaDB
 -- PHP Version: 8.0.19
 
@@ -321,6 +321,8 @@ CREATE TABLE `users` (
   `password` varchar(255) NOT NULL,
   `phone` bigint(10) NOT NULL,
   `status` tinyint(1) DEFAULT 1 COMMENT '0 =>not active,1 =>active',
+  `salary` mediumint(6) NOT NULL,
+  `bouns` mediumint(4) NOT NULL DEFAULT 0,
   `image` varchar(255) NOT NULL DEFAULT 'default.png',
   `gender` enum('m','f') NOT NULL,
   `verification_code` mediumint(6) DEFAULT NULL,
@@ -329,6 +331,23 @@ CREATE TABLE `users` (
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NULL DEFAULT NULL ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `users`
+--
+
+INSERT INTO `users` (`id`, `first_name`, `last_name`, `email`, `password`, `phone`, `status`, `salary`, `bouns`, `image`, `gender`, `verification_code`, `code_expired_at`, `email_verified_at`, `created_at`, `updated_at`) VALUES
+(4, 'ali', 'sayed', 'alisayedabdelwahed@gmail.com', '123456', 1060328852, 1, 4000, 350, 'default.png', 'm', NULL, NULL, NULL, '2022-09-16 12:58:54', '2022-09-17 11:38:14'),
+(5, 'hossam', 'fares', 'hossam@gmail.com', '123456', 1032659874, 1, 2300, 0, 'default.png', 'm', NULL, NULL, NULL, '2022-09-17 05:27:42', '2022-09-17 11:38:20'),
+(6, 'menna', 'mohamed', 'menna@gmail.com', '123456', 1032669874, 1, 3400, 110, 'default.png', 'f', NULL, NULL, NULL, '2022-09-17 05:27:42', '2022-09-17 11:38:27'),
+(7, 'hazem', 'fares', 'hazem@gmail.com', '123456', 1032659844, 1, 2400, 0, 'default.png', 'm', NULL, NULL, NULL, '2022-09-17 05:27:42', '2022-09-17 12:10:32'),
+(8, 'abdo', 'sayed', 'abdo@gmail.com', '123456', 1032658874, 1, 3900, 150, 'default.png', 'm', NULL, NULL, NULL, '2022-09-17 05:27:42', '2022-09-17 11:43:07'),
+(9, 'ahmed', 'sayed', 'ahmed@gmail.com', '123456', 1032657874, 1, 3100, 150, 'default.png', 'm', NULL, NULL, NULL, '2022-09-17 05:27:42', '2022-09-17 11:44:49'),
+(10, 'hussein', 'ali', 'hussein@gmail.com', '123456', 1032653874, 1, 2800, 95, 'default.png', 'm', NULL, NULL, NULL, '2022-09-17 05:27:42', '2022-09-17 11:38:53'),
+(11, 'mahmoud', 'hassan', 'mahmoud@gmail.com', '123456', 1032759874, 1, 3150, 0, 'default.png', 'm', NULL, NULL, NULL, '2022-09-17 05:27:42', '2022-09-17 11:39:05'),
+(12, 'fatima', 'omar', 'fatima@gmail.com', '123456', 1032359874, 1, 6400, 230, 'default.png', 'f', NULL, NULL, NULL, '2022-09-17 05:27:42', '2022-09-17 11:39:16'),
+(13, 'salma', 'ibrahim', 'salma@gmail.com', '123456', 1032609874, 1, 2900, 100, 'default.png', 'f', NULL, NULL, NULL, '2022-09-17 05:27:42', '2022-09-17 11:39:28'),
+(14, 'arwa', 'hamed', 'arwa@gmail.com', '123456', 1163412598, 1, 3900, 240, 'default.png', 'f', NULL, NULL, NULL, '2022-09-17 13:44:40', NULL);
 
 --
 -- Indexes for dumped tables
@@ -400,16 +419,16 @@ ALTER TABLE `offers`
 --
 ALTER TABLE `orders`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `orders_addresses_fk` (`address_id`),
-  ADD KEY `orders_coupons_fk` (`coupon_id`);
+  ADD KEY `orders_coupons_fk` (`coupon_id`),
+  ADD KEY `orders_addresses_fk` (`address_id`);
 
 --
 -- Indexes for table `products`
 --
 ALTER TABLE `products`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `products_subcategories_fk` (`subcategory_id`),
-  ADD KEY `products_brands_fk` (`brand_id`);
+  ADD KEY `products_brands_fk` (`brand_id`),
+  ADD KEY `products_subcategories_fk` (`subcategory_id`);
 
 --
 -- Indexes for table `products_offers`
@@ -547,7 +566,7 @@ ALTER TABLE `subcategories`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- Constraints for dumped tables
@@ -557,36 +576,36 @@ ALTER TABLE `users`
 -- Constraints for table `addresses`
 --
 ALTER TABLE `addresses`
-  ADD CONSTRAINT `addresses_regions_fk` FOREIGN KEY (`region_ID`) REFERENCES `resions` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `addresses_users_fk` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
+  ADD CONSTRAINT `addresses_regions_fk` FOREIGN KEY (`region_ID`) REFERENCES `resions` (`id`),
+  ADD CONSTRAINT `addresses_users_fk` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `carts`
 --
 ALTER TABLE `carts`
-  ADD CONSTRAINT `carts_products_fk` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `carts_users_fk` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `carts_products_fk` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`),
+  ADD CONSTRAINT `carts_users_fk` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
 
 --
 -- Constraints for table `favs`
 --
 ALTER TABLE `favs`
   ADD CONSTRAINT `favs_products_fk` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `favs_users_fk` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `favs_users_fk` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
 
 --
 -- Constraints for table `orders`
 --
 ALTER TABLE `orders`
-  ADD CONSTRAINT `orders_addresses_fk` FOREIGN KEY (`address_id`) REFERENCES `addresses` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `orders_addresses_fk` FOREIGN KEY (`address_id`) REFERENCES `addresses` (`id`),
   ADD CONSTRAINT `orders_coupons_fk` FOREIGN KEY (`coupon_id`) REFERENCES `coupons` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `products`
 --
 ALTER TABLE `products`
-  ADD CONSTRAINT `products_brands_fk` FOREIGN KEY (`brand_id`) REFERENCES `brands` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `products_subcategories_fk` FOREIGN KEY (`subcategory_id`) REFERENCES `subcategories` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `products_brands_fk` FOREIGN KEY (`brand_id`) REFERENCES `brands` (`id`),
+  ADD CONSTRAINT `products_subcategories_fk` FOREIGN KEY (`subcategory_id`) REFERENCES `subcategories` (`id`);
 
 --
 -- Constraints for table `products_offers`
@@ -619,7 +638,7 @@ ALTER TABLE `resions`
 -- Constraints for table `reviews`
 --
 ALTER TABLE `reviews`
-  ADD CONSTRAINT `products_reviews_fk` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `reviews_products_fk` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `reviews_users_fk` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
