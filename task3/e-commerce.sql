@@ -315,8 +315,8 @@ CREATE TABLE `subcategories` (
 
 CREATE TABLE `users` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `name_en` varchar(32) NOT NULL,
-  `name_ar` varchar(32) NOT NULL,
+  `first_name` varchar(32) NOT NULL,
+  `last_name` varchar(32) NOT NULL,
   `email` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL,
   `phone` bigint(10) NOT NULL,
